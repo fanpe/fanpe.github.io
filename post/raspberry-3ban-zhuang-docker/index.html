@@ -1,0 +1,249 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>raspberry 3b+安装Docker | 菜鸟窝</title>
+<link rel="shortcut icon" href="https://fanpe.github.io/favicon.ico?v=1598595767136">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fanpe.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="raspberry 3b+安装Docker | 菜鸟窝 - Atom Feed" href="https://fanpe.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="由于树莓派暂无法命令安装，只能脚本安装
+安装Docker:
+下载安装脚本：
+curl -fsSL https://get.docker.com -o get-docker.sh
+使用阿里云镜像下载安装：
+sudo sh get-docker..." />
+    <meta name="keywords" content="raspberry" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fanpe.github.io">
+  <img class="avatar" src="https://fanpe.github.io/images/avatar.png?v=1598595767136" alt="">
+  </a>
+  <h1 class="site-title">
+    菜鸟窝
+  </h1>
+  <p class="site-description">
+    日常手记，欢迎交流
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              raspberry 3b+安装Docker
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-05-31
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://fanpe.github.io/tag/8gGIgyO6P/" class="post-tag">
+                  # raspberry
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="由于树莓派暂无法命令安装只能脚本安装">由于树莓派暂无法命令安装，只能脚本安装</h1>
+<h1 id="安装docker">安装Docker:</h1>
+<h2 id="下载安装脚本">下载安装脚本：</h2>
+<p><code>curl -fsSL https://get.docker.com -o get-docker.sh</code></p>
+<h2 id="使用阿里云镜像下载安装">使用阿里云镜像下载安装：</h2>
+<p><code>sudo sh get-docker.sh --mirror Aliyun</code></p>
+<ul>
+<li>图片参考（表示安装成功）：<br>
+<img src="https://img2018.cnblogs.com/blog/981325/201911/981325-20191111105240573-1793306366.png" alt="" loading="lazy"></li>
+</ul>
+<h2 id="将当前用户加入docker组">将当前用户加入docker组：</h2>
+<ul>
+<li>这里我把pi用户加入，修改一下就可以了<br>
+<code>sudo usermod aG docker pi</code></li>
+</ul>
+<h1 id="安装docker-compose">安装docker-compose</h1>
+<ul>
+<li>因为树莓派是arm架构，docker-compose是没有提供官方二进制文件的，所以我们要使用python的pip 来工具来安装</li>
+</ul>
+<h2 id="更新apt软件源及换源">更新apt软件源及换源：</h2>
+<p><code>sudo vim /etc/apt/sources.list</code></p>
+<ul>
+<li>文本里面加上：<br>
+<code>deb http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ stretch main non-free contrib</code><br>
+<code>deb-src http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ stretch main non-free contrib</code></li>
+<li>更新apt源并下载libffi-dev:<br>
+<code>sudo apt-get update</code><br>
+<code>sudo apt-get install -y libffi-dev</code></li>
+</ul>
+<h2 id="选择哪个版本python安装">选择哪个版本python安装：</h2>
+<ul>
+<li>python2:<br>
+<code>sudo pip -m install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade pip --trusted-host pypi.mirrors.ustc.edu.cn</code><br>
+<code>sudo pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade urllib3 --trusted-host pypi.mirrors.tuna.tsinghua.edu.cn</code><br>
+<code>sudo pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade requests --trusted-host pypi.mirrors.tuna.tsinghua.edu.cn</code><br>
+<code>sudo pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade wheel --trusted-host pypi.mirrors.tuna.tsinghua.edu.cn</code><br>
+<code>sudo pip install -i https://pypi.tuna.tsinghua.edu.cn/simple docker-compose --trusted-host pypi.mirrors.tuna.tsinghua.edu.cn</code></li>
+<li>python3:<br>
+. 把pip改成pip3执行即可</li>
+<li>验证安装：<br>
+<code>docker-compose version</code><br>
+.参考图片：<br>
+<img src="https://img2018.cnblogs.com/blog/981325/201911/981325-20191111133739493-205623610.png" alt="" loading="lazy"></li>
+</ul>
+<h1 id="开放指定端口">开放指定端口：</h1>
+<ul>
+<li>如果是使用无线连接，要改为wlan0:<br>
+. 开放80端口：<br>
+<code>sudo iptables -I INPUT -i eth0 -p tcp --dport 80 -j ACCEPT</code><br>
+<code>sudo iptables -I OUTPUT -o eth0 -p tcp --sport 80 -j ACCEPT</code><br>
+. 关闭80端口：<br>
+<code>sudo iptables -I INPUT -i eth0 -p tcp --dport 80 -j DROP</code><br>
+<code>sudo iptables -I OUTPUT -o eth0 -p tcp --sport 80 -j DROP</code></li>
+</ul>
+<h1 id="总结">总结：</h1>
+<ul>
+<li>关键要按照步骤来，最好是更新pip里的包，防止出现未知错误，我遇到的坑是没有更新上面几个pip包，如有疏漏，欢迎指正</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E7%94%B1%E4%BA%8E%E6%A0%91%E8%8E%93%E6%B4%BE%E6%9A%82%E6%97%A0%E6%B3%95%E5%91%BD%E4%BB%A4%E5%AE%89%E8%A3%85%E5%8F%AA%E8%83%BD%E8%84%9A%E6%9C%AC%E5%AE%89%E8%A3%85">由于树莓派暂无法命令安装，只能脚本安装</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85docker">安装Docker:</a>
+<ul>
+<li><a href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC">下载安装脚本：</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E9%95%9C%E5%83%8F%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85">使用阿里云镜像下载安装：</a></li>
+<li><a href="#%E5%B0%86%E5%BD%93%E5%89%8D%E7%94%A8%E6%88%B7%E5%8A%A0%E5%85%A5docker%E7%BB%84">将当前用户加入docker组：</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%89%E8%A3%85docker-compose">安装docker-compose</a>
+<ul>
+<li><a href="#%E6%9B%B4%E6%96%B0apt%E8%BD%AF%E4%BB%B6%E6%BA%90%E5%8F%8A%E6%8D%A2%E6%BA%90">更新apt软件源及换源：</a></li>
+<li><a href="#%E9%80%89%E6%8B%A9%E5%93%AA%E4%B8%AA%E7%89%88%E6%9C%ACpython%E5%AE%89%E8%A3%85">选择哪个版本python安装：</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BC%80%E6%94%BE%E6%8C%87%E5%AE%9A%E7%AB%AF%E5%8F%A3">开放指定端口：</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结：</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fanpe.github.io/post/thrift-yu-qi-ta-zu-jian-de-jiao-hu-shi-xian/">
+              <h3 class="post-title">
+                thrift与其他组件的交互实现
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://fanpe.github.io" target="_blank">noob'home</a>
+  <a class="rss" href="https://fanpe.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

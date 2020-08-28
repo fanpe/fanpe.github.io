@@ -1,0 +1,242 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>thrift与其他组件的交互实现 | 菜鸟窝</title>
+<link rel="shortcut icon" href="https://fanpe.github.io/favicon.ico?v=1598595767136">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fanpe.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="thrift与其他组件的交互实现 | 菜鸟窝 - Atom Feed" href="https://fanpe.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="下载thrift源码包
+安装yum库
+yum install boost-devel-static libboost-dev libboost-test-dev libboost-program-options-dev libevent-d..." />
+    <meta name="keywords" content="big data,thrift" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fanpe.github.io">
+  <img class="avatar" src="https://fanpe.github.io/images/avatar.png?v=1598595767136" alt="">
+  </a>
+  <h1 class="site-title">
+    菜鸟窝
+  </h1>
+  <p class="site-description">
+    日常手记，欢迎交流
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              thrift与其他组件的交互实现
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-05-27
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://fanpe.github.io/tag/evYMuKP-I/" class="post-tag">
+                  # big data
+                </a>
+              
+                <a href="https://fanpe.github.io/tag/QF8GrA-4X/" class="post-tag">
+                  # thrift
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="下载thrift源码包"><strong>下载thrift源码包</strong></h1>
+<h2 id="安装yum库">安装yum库</h2>
+<p><code>yum install boost-devel-static libboost-dev libboost-test-dev libboost-program-options-dev libevent-dev automake libtool flex bison pkg-config g++ libssl-dev ant</code></p>
+<h2 id="进入目录执行">进入目录执行</h2>
+<p><code>./configure --with-cpp --with-boost --with-python --without-csharp --with-java --without-erlang --without-perl --without-php --without-php_extension --without-ruby --without-haskell --without-go</code></p>
+<h2 id="接着编译">接着编译</h2>
+<p><code>make &amp;&amp; make install</code></p>
+<h2 id="安装python依赖的thrift模块">安装python依赖的thrift模块</h2>
+<p><code>pip install thrift</code><br>
+<code>pip show thrift</code>显示安装的路径，如果有几个版本的python,确保你安装到哪个环境中去</p>
+<h2 id="定义thrift接口">定义thrift接口</h2>
+<p>例如文件RecSys.thrift<br>
+<code>cat RecSys.thrift service RecSys { string rec_data(1:string data) }</code>，里面还可以再添加</p>
+<h2 id="对于相应的开发语言生成接口">对于相应的开发语言生成接口</h2>
+<p>没错，上面配置configure ......--with-python就是生成python接口，执行:<code>thrift -gen py RecSys.thrift</code></p>
+<h2 id="生成最终文件">生成最终文件</h2>
+<p>gen-py 把该文件路径引用到项目中就可以开发了</p>
+<h2 id="简单地实现客户端与服务的通讯">简单地实现客户端与服务的通讯</h2>
+<ul>
+<li>
+<p>client</p>
+<p>import sys<br>
+sys.path.append('../schema/gen-py')<br>
+from thrift import Thrift<br>
+from thrift.transport import TSocket<br>
+from thrift.transport import TTransport<br>
+from thrift.protocol import TBinaryProtocol<br>
+from RecSys import RecSys<br>
+try:</p>
+<h3 id="设置端口">设置端口</h3>
+<pre><code>  transport = TSocket.TSocket('localhost', port=9090)
+</code></pre>
+<h3 id="设置传输层">设置传输层</h3>
+<pre><code>  transport = TTransport.TBufferedTransport(transport)
+</code></pre>
+<h3 id="设置传输协议">设置传输协议</h3>
+<pre><code>  protocol = TBinaryProtocol.TBinaryProtocol(transport)
+
+  client = RecSys.Client(protocol)
+
+  transport.open()
+
+  rst = client.rec_data(&quot;are you ok!!!&quot;)
+  print &quot;receive return data: &quot;, rst 
+
+  transport.close()
+
+  except Thrift.TException, ex: 
+          print &quot;%s&quot; % (ex.message)
+</code></pre>
+</li>
+<li>
+<p>server<br>
+<code>class RecSysHandler(RecSys.Iface): def rec_data(self, a): print &quot;Receive: %s&quot; %(a) return &quot;I'm OK !!!&quot;</code><br>
+在server端只修改上面代码就可以了</p>
+</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E4%B8%8B%E8%BD%BDthrift%E6%BA%90%E7%A0%81%E5%8C%85"><strong>下载thrift源码包</strong></a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85yum%E5%BA%93">安装yum库</a></li>
+<li><a href="#%E8%BF%9B%E5%85%A5%E7%9B%AE%E5%BD%95%E6%89%A7%E8%A1%8C">进入目录执行</a></li>
+<li><a href="#%E6%8E%A5%E7%9D%80%E7%BC%96%E8%AF%91">接着编译</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85python%E4%BE%9D%E8%B5%96%E7%9A%84thrift%E6%A8%A1%E5%9D%97">安装python依赖的thrift模块</a></li>
+<li><a href="#%E5%AE%9A%E4%B9%89thrift%E6%8E%A5%E5%8F%A3">定义thrift接口</a></li>
+<li><a href="#%E5%AF%B9%E4%BA%8E%E7%9B%B8%E5%BA%94%E7%9A%84%E5%BC%80%E5%8F%91%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E6%8E%A5%E5%8F%A3">对于相应的开发语言生成接口</a></li>
+<li><a href="#%E7%94%9F%E6%88%90%E6%9C%80%E7%BB%88%E6%96%87%E4%BB%B6">生成最终文件</a></li>
+<li><a href="#%E7%AE%80%E5%8D%95%E5%9C%B0%E5%AE%9E%E7%8E%B0%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E7%9A%84%E9%80%9A%E8%AE%AF">简单地实现客户端与服务的通讯</a>
+<ul>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E7%AB%AF%E5%8F%A3">设置端口</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E4%BC%A0%E8%BE%93%E5%B1%82">设置传输层</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">设置传输协议</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://fanpe.github.io" target="_blank">noob'home</a>
+  <a class="rss" href="https://fanpe.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://fanpe.github.io</id>
     <title>菜鸟窝</title>
-    <updated>2020-05-27T12:25:51.988Z</updated>
+    <updated>2020-08-28T06:23:05.863Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://fanpe.github.io"/>
     <link rel="self" href="https://fanpe.github.io/atom.xml"/>
@@ -11,35 +11,178 @@
     <icon>https://fanpe.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 菜鸟窝</rights>
     <entry>
-        <title type="html"><![CDATA[Hello Gridea]]></title>
-        <id>https://fanpe.github.io/post/hello-gridea/</id>
-        <link href="https://fanpe.github.io/post/hello-gridea/">
+        <title type="html"><![CDATA[idea配置远程raspberrypi 3b+部署的docker]]></title>
+        <id>https://fanpe.github.io/post/idea-pei-zhi-yuan-cheng-raspberrypi-3bbu-shu-de-docker/</id>
+        <link href="https://fanpe.github.io/post/idea-pei-zhi-yuan-cheng-raspberrypi-3bbu-shu-de-docker/">
         </link>
-        <updated>2018-12-11T16:00:00.000Z</updated>
-        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
+        <updated>2020-06-04T15:57:36.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="前提">前提：</h1>
+<ul>
+<li>raspberrypi已经部署了docker</li>
+<li>本机idea版本为2019.3</li>
+<li>本文以阿里镜像服务为例（其他自行搜索）</li>
+</ul>
+<h1 id="阿里开通镜像服务">阿里开通镜像服务</h1>
+<ul>
+<li><a href="https://tianchi.aliyun.com/competition/entrance/231759/tab/174?spm=5176.12281978.0.0.37724127JwbJWQ">入口</a></li>
+<li>保存AccessKey,后面有用，<a href="https://help.aliyun.com/document_detail/145787.html?spm=a2c4g.11186623.2.22.51213839O8i7E5#task-2349932">获取AccessKey</a></li>
+</ul>
+<h1 id="raspberry相关设置">raspberry相关设置：</h1>
+<ul>
+<li>更改docker与ide连接的端口,下以操作最好切换到root用户</li>
+<li>关闭Docker.service：<br>
+<code>service docker stop</code></li>
+<li>设置远程连接端口：<br>
+<code>vim /lib/systemd/system/docker.service/docker.service</code></li>
+<li>找到ExecStart这行，改成下面：<br>
+<code>ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375 --containerd=/run/containerd/containerd.sock</code></li>
+<li>启动docker：<br>
+<code>systemctl daemon-reload</code><br>
+<code>service docker start</code></li>
+<li>验证是否设置成功<br>
+<code>curl http://localhost:2375/version</code></li>
+</ul>
+<h1 id="ide-cloud-toolkit由于本人还没有图床故暂无图片">ide + cloud toolkit(由于本人还没有图床，故暂无图片)</h1>
+<ul>
+<li>安装Alibaba Cloud Toolkit插件(自行百度)</li>
+<li>在InterlliJ IDEA工具栏单击 Tools&gt;Alibaba Cloud &gt;Preferences..</li>
+<li>点击Alibaba cloudToolkit出现的导航栏中单击Docker输入：<br>
+http://你远程主机安装了docker的ip地址：自定义端口(上文设置为2375)，再点test connection,看看是否连接成功</li>
+<li>在同级目录中点击Accounts:<br>
+填上Access key 和 Access Key Secret</li>
+</ul>
+<h2 id="donehave-fun">done,have fun!!</h2>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[raspberry 3b+安装Docker]]></title>
+        <id>https://fanpe.github.io/post/raspberry-3ban-zhuang-docker/</id>
+        <link href="https://fanpe.github.io/post/raspberry-3ban-zhuang-docker/">
+        </link>
+        <updated>2020-05-31T08:03:13.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="由于树莓派暂无法命令安装只能脚本安装">由于树莓派暂无法命令安装，只能脚本安装</h1>
+<h1 id="安装docker">安装Docker:</h1>
+<h2 id="下载安装脚本">下载安装脚本：</h2>
+<p><code>curl -fsSL https://get.docker.com -o get-docker.sh</code></p>
+<h2 id="使用阿里云镜像下载安装">使用阿里云镜像下载安装：</h2>
+<p><code>sudo sh get-docker.sh --mirror Aliyun</code></p>
+<ul>
+<li>图片参考（表示安装成功）：<br>
+<img src="https://img2018.cnblogs.com/blog/981325/201911/981325-20191111105240573-1793306366.png" alt="" loading="lazy"></li>
+</ul>
+<h2 id="将当前用户加入docker组">将当前用户加入docker组：</h2>
+<ul>
+<li>这里我把pi用户加入，修改一下就可以了<br>
+<code>sudo usermod aG docker pi</code></li>
+</ul>
+<h1 id="安装docker-compose">安装docker-compose</h1>
+<ul>
+<li>因为树莓派是arm架构，docker-compose是没有提供官方二进制文件的，所以我们要使用python的pip 来工具来安装</li>
+</ul>
+<h2 id="更新apt软件源及换源">更新apt软件源及换源：</h2>
+<p><code>sudo vim /etc/apt/sources.list</code></p>
+<ul>
+<li>文本里面加上：<br>
+<code>deb http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ stretch main non-free contrib</code><br>
+<code>deb-src http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ stretch main non-free contrib</code></li>
+<li>更新apt源并下载libffi-dev:<br>
+<code>sudo apt-get update</code><br>
+<code>sudo apt-get install -y libffi-dev</code></li>
+</ul>
+<h2 id="选择哪个版本python安装">选择哪个版本python安装：</h2>
+<ul>
+<li>python2:<br>
+<code>sudo pip -m install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade pip --trusted-host pypi.mirrors.ustc.edu.cn</code><br>
+<code>sudo pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade urllib3 --trusted-host pypi.mirrors.tuna.tsinghua.edu.cn</code><br>
+<code>sudo pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade requests --trusted-host pypi.mirrors.tuna.tsinghua.edu.cn</code><br>
+<code>sudo pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade wheel --trusted-host pypi.mirrors.tuna.tsinghua.edu.cn</code><br>
+<code>sudo pip install -i https://pypi.tuna.tsinghua.edu.cn/simple docker-compose --trusted-host pypi.mirrors.tuna.tsinghua.edu.cn</code></li>
+<li>python3:<br>
+. 把pip改成pip3执行即可</li>
+<li>验证安装：<br>
+<code>docker-compose version</code><br>
+.参考图片：<br>
+<img src="https://img2018.cnblogs.com/blog/981325/201911/981325-20191111133739493-205623610.png" alt="" loading="lazy"></li>
+</ul>
+<h1 id="开放指定端口">开放指定端口：</h1>
+<ul>
+<li>如果是使用无线连接，要改为wlan0:<br>
+. 开放80端口：<br>
+<code>sudo iptables -I INPUT -i eth0 -p tcp --dport 80 -j ACCEPT</code><br>
+<code>sudo iptables -I OUTPUT -o eth0 -p tcp --sport 80 -j ACCEPT</code><br>
+. 关闭80端口：<br>
+<code>sudo iptables -I INPUT -i eth0 -p tcp --dport 80 -j DROP</code><br>
+<code>sudo iptables -I OUTPUT -o eth0 -p tcp --sport 80 -j DROP</code></li>
+</ul>
+<h1 id="总结">总结：</h1>
+<ul>
+<li>关键要按照步骤来，最好是更新pip里的包，防止出现未知错误，我遇到的坑是没有更新上面几个pip包，如有疏漏，欢迎指正</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[thrift与其他组件的交互实现]]></title>
+        <id>https://fanpe.github.io/post/thrift-yu-qi-ta-zu-jian-de-jiao-hu-shi-xian/</id>
+        <link href="https://fanpe.github.io/post/thrift-yu-qi-ta-zu-jian-de-jiao-hu-shi-xian/">
+        </link>
+        <updated>2020-05-27T13:33:41.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="下载thrift源码包"><strong>下载thrift源码包</strong></h1>
+<h2 id="安装yum库">安装yum库</h2>
+<p><code>yum install boost-devel-static libboost-dev libboost-test-dev libboost-program-options-dev libevent-dev automake libtool flex bison pkg-config g++ libssl-dev ant</code></p>
+<h2 id="进入目录执行">进入目录执行</h2>
+<p><code>./configure --with-cpp --with-boost --with-python --without-csharp --with-java --without-erlang --without-perl --without-php --without-php_extension --without-ruby --without-haskell --without-go</code></p>
+<h2 id="接着编译">接着编译</h2>
+<p><code>make &amp;&amp; make install</code></p>
+<h2 id="安装python依赖的thrift模块">安装python依赖的thrift模块</h2>
+<p><code>pip install thrift</code><br>
+<code>pip show thrift</code>显示安装的路径，如果有几个版本的python,确保你安装到哪个环境中去</p>
+<h2 id="定义thrift接口">定义thrift接口</h2>
+<p>例如文件RecSys.thrift<br>
+<code>cat RecSys.thrift service RecSys { string rec_data(1:string data) }</code>，里面还可以再添加</p>
+<h2 id="对于相应的开发语言生成接口">对于相应的开发语言生成接口</h2>
+<p>没错，上面配置configure ......--with-python就是生成python接口，执行:<code>thrift -gen py RecSys.thrift</code></p>
+<h2 id="生成最终文件">生成最终文件</h2>
+<p>gen-py 把该文件路径引用到项目中就可以开发了</p>
+<h2 id="简单地实现客户端与服务的通讯">简单地实现客户端与服务的通讯</h2>
+<ul>
+<li>
+<p>client</p>
+<p>import sys<br>
+sys.path.append('../schema/gen-py')<br>
+from thrift import Thrift<br>
+from thrift.transport import TSocket<br>
+from thrift.transport import TTransport<br>
+from thrift.protocol import TBinaryProtocol<br>
+from RecSys import RecSys<br>
+try:</p>
+<h3 id="设置端口">设置端口</h3>
+<pre><code>  transport = TSocket.TSocket('localhost', port=9090)
+</code></pre>
+<h3 id="设置传输层">设置传输层</h3>
+<pre><code>  transport = TTransport.TBufferedTransport(transport)
+</code></pre>
+<h3 id="设置传输协议">设置传输协议</h3>
+<pre><code>  protocol = TBinaryProtocol.TBinaryProtocol(transport)
+
+  client = RecSys.Client(protocol)
+
+  transport.open()
+
+  rst = client.rec_data(&quot;are you ok!!!&quot;)
+  print &quot;receive return data: &quot;, rst 
+
+  transport.close()
+
+  except Thrift.TException, ex: 
+          print &quot;%s&quot; % (ex.message)
+</code></pre>
+</li>
+<li>
+<p>server<br>
+<code>class RecSysHandler(RecSys.Iface): def rec_data(self, a): print &quot;Receive: %s&quot; %(a) return &quot;I'm OK !!!&quot;</code><br>
+在server端只修改上面代码就可以了</p>
+</li>
+</ul>
 ]]></content>
     </entry>
 </feed>
